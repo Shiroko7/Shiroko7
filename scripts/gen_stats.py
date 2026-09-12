@@ -34,7 +34,18 @@ RAMP = ["#8b5cf6", "#a78bfa", "#c084fc", "#e879f9", "#f0abfc", "#f5d0fe"]
 W, BAR_H, R = 480, 10, 5
 
 # The chart is a statement about tools, so the caption gets to answer it.
-QUIP = ("I don't actually like TypeScript that much")
+# One string per rendered line.
+#
+# NOTE: ("x") is a string, not a tuple - a 1-line quip needs the trailing
+# comma, or the renderer below iterates it character by character and emits one
+# <text> element per letter. _quip_lines() normalises either form so editing
+# this by hand cannot produce 42 stacked letters.
+QUIP = ("I don't actually like TypeScript that much",)
+
+
+def _quip_lines():
+    """Accept a bare string or any iterable of strings."""
+    return (QUIP,) if isinstance(QUIP, str) else tuple(QUIP)
 
 
 def api(url):
@@ -75,8 +86,9 @@ def build(totals):
         x += w
 
     legend_rows = (len(segs) + 2) // 3
+    quip = _quip_lines()
     qy = 30 + legend_rows * 19 + 14
-    cap_y = qy + len(QUIP) * 16 + 8
+    cap_y = qy + len(quip) * 16 + 8
     H = cap_y + 6
 
     parts = [
@@ -113,7 +125,7 @@ def build(totals):
         parts.append(f'<text class="pct" x="{cx+11+len(name)*6.3+6}" y="{cy}">{pct:.1f}%</text>')
 
     mb = total / 1048576
-    for i, line in enumerate(QUIP):
+    for i, line in enumerate(quip):
         parts.append(f'<text class="quip" x="0" y="{qy + i*16}">{line}</text>')
     parts.append(
         f'<text class="cap" x="0" y="{cap_y}">by bytes across {len(rows)} languages · '
