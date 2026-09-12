@@ -34,8 +34,7 @@ RAMP = ["#8b5cf6", "#a78bfa", "#c084fc", "#e879f9", "#f0abfc", "#f5d0fe"]
 W, BAR_H, R = 480, 10, 5
 
 # The chart is a statement about tools, so the caption gets to answer it.
-QUIP = ("I don't actually like TypeScript or Python that much.",
-        "They're just annoyingly often the right tool for the job.")
+QUIP = ("I don't actually like TypeScript that much")
 
 
 def api(url):
