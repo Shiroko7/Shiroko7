@@ -7,5 +7,5 @@
 <br>
 
 <p align="center">
-  <img src="languages.svg" width="480" alt="Language split across my public repositories">
+  <img src="languages.svg" width="490" alt="Language split across my public repositories">
 </p>

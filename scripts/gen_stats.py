@@ -33,6 +33,10 @@ RAMP = ["#8b5cf6", "#a78bfa", "#c084fc", "#e879f9", "#f0abfc", "#f5d0fe"]
 
 W, BAR_H, R = 480, 10, 5
 
+# The chart is a statement about tools, so the caption gets to answer it.
+QUIP = ("I don't actually like TypeScript or Python that much.",
+        "They're just annoyingly often the right tool for the job.")
+
 
 def api(url):
     req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json"})
@@ -71,14 +75,20 @@ def build(totals):
         segs.append((name, 100 * n / total, x, w, RAMP[i % len(RAMP)]))
         x += w
 
+    legend_rows = (len(segs) + 2) // 3
+    qy = 30 + legend_rows * 19 + 14
+    cap_y = qy + len(QUIP) * 16 + 8
+    H = cap_y + 6
+
     parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} 74" width="{W}" height="74" '
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
         f'role="img" aria-label="Language split across my public repositories">',
         "<title>Languages</title>",
         "<style>"
         ".lbl{font:500 11px ui-sans-serif,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8b5cf6}"
         ".pct{font:400 11px ui-sans-serif,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#a78bfa}"
-        ".cap{font:400 10px ui-sans-serif,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#a78bfa;opacity:.75}"
+        ".quip{font:italic 400 11.5px ui-serif,Georgia,'Times New Roman',serif;fill:#a78bfa;opacity:.92}"
+        ".cap{font:400 9.5px ui-sans-serif,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#a78bfa;opacity:.6}"
         f".seg{{animation:grow 1.1s cubic-bezier(.22,1,.36,1) both}}"
         "@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}"
         "@media (prefers-reduced-motion:reduce){.seg{animation:none}}"
@@ -104,8 +114,10 @@ def build(totals):
         parts.append(f'<text class="pct" x="{cx+11+len(name)*6.3+6}" y="{cy}">{pct:.1f}%</text>')
 
     mb = total / 1048576
+    for i, line in enumerate(QUIP):
+        parts.append(f'<text class="quip" x="0" y="{qy + i*16}">{line}</text>')
     parts.append(
-        f'<text class="cap" x="0" y="70">by bytes across {len(rows)} languages · '
+        f'<text class="cap" x="0" y="{cap_y}">by bytes across {len(rows)} languages · '
         f'{mb:.1f} MB · vendored and markup excluded</text>'
     )
     parts.append("</svg>")
